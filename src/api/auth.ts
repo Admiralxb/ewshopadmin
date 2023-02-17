@@ -8,3 +8,11 @@ export function login(data: object) {
         data
     });
 }
+
+// 获取用户信息
+export function getUserInfo() {
+    return request({
+        url: '/api/admin/user',
+        method: 'get'
+    });
+}

@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {login} from "@/api/auth";
+import {login, getUserInfo} from "@/api/auth";
 
 // 2. 定义 store 的类型
 interface IUserState {
@@ -55,18 +55,31 @@ export const useUserStore = defineStore({
             this.permissions = permissions;
         },
         // 异步的登录方法
-        async login(userInfo: object) {
+        async login(userInfo: object) {// userInfo = params
             try {
                 const response: any = await login(userInfo);
+                console.log(response)
 
                 if (response.access_token) {
                     this.setToken(response.access_token);
                     // 登录之后，token已经拿到了，然后getUser获取调用,
-                    //return await this.getUser();
+                    return await this.getUser();
                 }
             } catch (error) {
                 // console.log(error);
             }
         },
+        // 异步的获取用户信息方法
+        async getUser() {
+            try {
+                const response: any = await getUserInfo();
+                this.setAvatar(response.avatar_url);
+                this.setUserName(response.name);
+                this.setUserInfo(response);
+                return response;
+            } catch (error) {
+                // console.log(error);
+            }
+        }
     }
 })
